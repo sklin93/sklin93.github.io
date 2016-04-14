@@ -1,5 +1,6 @@
 <html>
 <head>
+	
 <title>HoG face detection</title>
 <link href='http://fonts.googleapis.com/css?family=Nunito:300|Crimson+Text|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" title="Default" href="styles/github.css">
@@ -121,12 +122,12 @@ table td img {
 <body>
 <div id="header" >
 <div id="headersub">
-<h1>Sikun LIN</h1>
+<h1><a href="index.html">Trace</a></h1>
 </div>
 </div>
 <div class="container">
 
-<h2>COMP5421 / Project 2 / HoG Face Detection with a Sliding Window</h2>
+<h2>HoG Face Detection with a Sliding Window</h2>
 
 <h3>1.1 Extract positive and random negative features</h3>
 <p>6,713 cropped 36x36 faces from 
@@ -138,8 +139,8 @@ were randomly sampled from multi-scales non-face scenes, sample number was final
 <center>
 <table border=0 cellpadding="1" cellpadding="1">
 <tr>
-<td><center><a href="image/faceHoG.png"><img src="image/faceHoG.png" height="150" width="150"></a></center>
-<td><center><a href="image/faceHoG2.png"><img src="image/faceHoG2.png" height="150" width="150"></a></center>
+<td><center><a href="images/faceHoG.png"><img src="images/faceHoG.png" height="150" width="150"></a></center>
+<td><center><a href="images/faceHoG2.png"><img src="images/faceHoG2.png" height="150" width="150"></a></center>
 </tr>
 
 </table></center>
@@ -155,7 +156,7 @@ were randomly sampled from multi-scales non-face scenes, sample number was final
 <center>
 <table border=0 cellpadding="1" cellpadding="1">
 <tr>
-<td><center><a href="image/svm.png"><img src="image/svm.png"  height="350" width="350"></a></center>
+<td><center><a href="images/svm.png"><img src="images/svm.png"  height="350" width="350"></a></center>
 </tr>
 </table></center>
 <center><p style="font-size: 17px">Figure 2.How well the positive and negative features are separated</center></p>
@@ -172,8 +173,8 @@ were randomly sampled from multi-scales non-face scenes, sample number was final
 <center>
 <table border=0 cellpadding="1" cellpadding="1">
 <tr>
-<td><center><a href="image/average_precision.png"><img src="image/average_precision.png" height="300" width="350"></a></center>
-<td><center><a href="image/2.png"><img src="image/2.png" height="300" width="350"></a></center>
+<td><center><a href="images/average_precision.png"><img src="images/average_precision.png" height="300" width="350"></a></center>
+<td><center><a href="images/2.png"><img src="images/2.png" height="300" width="350"></a></center>
 </tr>
 </table></center>
 <center><p style="font-size: 17px">Figure 3.Test results of face detection on given test set</center></p>
@@ -184,27 +185,27 @@ were randomly sampled from multi-scales non-face scenes, sample number was final
 <center>
 <table border=1 cellpadding="1" cellpadding="1">
 <tr>
-<td><center><a href="image/example.png"><img src="image/example.png" height="250" width="350"></a></center>
-<td><center><a href="image/good1.png"><img src="image/good1.png" height="250" width="350"></a></center>
-<td><center><a href="image/good2.png"><img src="image/good2.png" height="250" width="350"></a></center>
+<td><center><a href="images/example.png"><img src="images/example.png" height="250" width="350"></a></center>
+<td><center><a href="images/good1.png"><img src="images/good1.png" height="250" width="350"></a></center>
+<td><center><a href="images/good2.png"><img src="images/good2.png" height="250" width="350"></a></center>
 </tr>
 
 <tr>
-<td><center><a href="image/good3.png"><img src="image/good3.png" height="250" width="350"></a></center>
-<td><center><a href="image/good4.png"><img src="image/good4.png" height="250" width="350"></a></center>
-<td><center><a href="image/non_human.png"><img src="image/non_human.png" height="250" width="350"></a></center>
+<td><center><a href="images/good3.png"><img src="images/good3.png" height="250" width="350"></a></center>
+<td><center><a href="images/good4.png"><img src="images/good4.png" height="250" width="350"></a></center>
+<td><center><a href="images/non_human.png"><img src="images/non_human.png" height="250" width="350"></a></center>
 </tr>
 
 <tr>
-<td><center><a href="image/notreal1.png"><img src="image/notreal1.png" height="250" width="350"></a></center>
-<td><center><a href="image/notreal2.png"><img src="image/notreal2.png" height="250" width="350"></a></center>
-<td><center><a href="image/notreal3.png"><img src="image/notreal3.png" height="250" width="350"></a></center>
+<td><center><a href="images/notreal1.png"><img src="images/notreal1.png" height="250" width="350"></a></center>
+<td><center><a href="images/notreal2.png"><img src="images/notreal2.png" height="250" width="350"></a></center>
+<td><center><a href="images/notreal3.png"><img src="images/notreal3.png" height="250" width="350"></a></center>
 </tr>
 
 <tr>
-<td><center><a href="image/processed.png"><img src="image/processed1.png" height="250" width="350"></a></center>
-<td><center><a href="image/bad1.png"><img src="image/bad1.png" height="250" width="350"></a></center>
-<td><center><a href="image/bad2.png"><img src="image/bad2.png" height="250" width="350"></a></center>
+<td><center><a href="images/processed.png"><img src="images/processed1.png" height="250" width="350"></a></center>
+<td><center><a href="images/bad1.png"><img src="images/bad1.png" height="250" width="350"></a></center>
+<td><center><a href="images/bad2.png"><img src="images/bad2.png" height="250" width="350"></a></center>
 </tr>
 
 </table></center>
@@ -215,8 +216,8 @@ were randomly sampled from multi-scales non-face scenes, sample number was final
 <center>
 <table border=1 cellpadding="1" cellpadding="1">
 <tr>
-<td><center><a href="image/extra1.png"><img src="image/extra1.png" height="250" width="492"></a></center>
-<td><center><a href="image/extra2.png"><img src="image/extra2.png" height="250" width="492"></a></center>
+<td><center><a href="images/extra1.png"><img src="images/extra1.png" height="250" width="492"></a></center>
+<td><center><a href="images/extra2.png"><img src="images/extra2.png" height="250" width="492"></a></center>
 </tr>
 
 </table></center>
