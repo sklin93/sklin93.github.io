@@ -32,7 +32,7 @@
 <a id="sikun-lins-homepage" class="anchor" href="#sikun-lins-homepage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Single View Metrology</h2>
 <h3>Introduction </h3>
 <p>
-  This Project is about building a 3D model from a 2D image. The input image is required to be <a href="http://en.wikipedia.org/wiki/Perspective_(graphical)#Three-point_perspective" >3-point perspective</a>. The basic algorithm follows the <a href="https://www.cs.cmu.edu/~ph/869/papers/Criminisi99.pdf" >Single View Metrology paper by Criminisi</a>. The UI creation and implementations are done on Matlab, and the code can be found <a href="https://" >here</a>.
+  This Project is about building a 3D model from a 2D image. The input image is required to be <a href="http://en.wikipedia.org/wiki/Perspective_(graphical)#Three-point_perspective" >3-point perspective</a>. The basic algorithm follows the <a href="https://www.cs.cmu.edu/~ph/869/papers/Criminisi99.pdf" >Single View Metrology paper by Criminisi</a>. The UI creation and implementations are done on Matlab, and the code can be found <a href="https://github.com/sklin93/Single-View-Metrology" >here</a>.
 </p>
 <h3>Step 1: Finding Vanishing Points </h3>
 <p>
@@ -60,8 +60,9 @@ The homography matrix Hxy is the 1,2,4 columns of the projection matrix; similar
 </table>
 <h3>Step 4: Mark interesting points </h3>
 <p> Once getting texture maps, what is left is the 3D coordinates of the interesting points during the construction of the 3D model. In my case, I chose the points on the same height (same z) at one time.</p>
-<p> The world origin on the image, and reference z are chosen as the height-reference to find other heights. First, choose a base point on the z = 0 plane, mark as b (bottom), and then mark the interesting point at z = z<sub>0</sub>. z<sub>0</sub> is calculated as follows:
+<p> The world origin on the image, and reference z are chosen as the height-reference to find other heights. First, choose a base point on the z = 0 plane, mark as b (bottom), and then mark the interesting point r at z = z<sub>0</sub>. z<sub>0</sub> is calculated as follows:
 </p>
+<td><center><a href="images/heightCal.png"><img src="images/heightCal.png" height="250" width="350"></a></center>
 <p> After getting z<sub>0</sub>, I continue mark the interesting points on the same height. The homography matrix to calculate these points x and y is the planar perspective map Hz = [aVx  bVy  cz<sub>0</sub>Vz+O]:
 </p>
 <td><center><a href="images/homoZ.png"><img src="images/homoZ.png" height="250" width="350"></a></center>
