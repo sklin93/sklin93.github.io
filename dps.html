@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+  <title>Trace by sklin93</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1><a href="index.html" style="color:white">Trace</a></h1>
+        <h2></h2>
+        <a href="https://github.com/sklin93" class="button"><small>Follow me on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h2>
+<a id="sikun-lins-homepage" class="anchor" href="#sikun-lins-homepage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Dense Photometric Stereo</h2>
+<h3>Introduction </h3>
+<p>
+  This project is the implementation of this paper: <a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1467260" >Dense Photometric Stereo Using a Mirror Sphere and Graph Cut</a>. Basically it uses a dataset with many photos of the same object taken under different light directions (photos and corresponding light directions are given) to reconstruct a 3D model of the object. Steps strictly follows the paper, here I only briefly describe the steps, please refer to the paper for more details. Implementation is done on Matlab, and code can be downloaded <a href="https://github.com/sklin93/Dense-Photometric-Stereo" >here</a>, and corresponding libraries used are stated in the README.
+</p>
+<h3>Step 1:  Uniform resampling </h3>
+<p>
+  Start with an sub-divided (4 times) icosahedron, finding the nearest icosahedron vertex L_o compared with each light direction L_i. Then interpolate the image I_o at L_o by: 
+</p>
+<td><center><a href="images/dps/resampling.png"><img src="images/dps/resampling.png" height="40" width="350"></a></center>
+<h3>Step 2: Find denominator image </h3>
+<p>Denominator image will be used for finding normals in the next step. Ideally, the denominator image should cancel out the surface albedo by producing ratio images, and it should be least affected by shadows and highlights.</p>
+<p>The selection step is: for each pixel (i,j), we sort the intensity of corresponding pixels over all images to have a full rank at each location. Then count the total number of pixels in each image that satisfies pixel_rank > 70th percentiles. Calculate the mean rank of these pixels for each images, and only keep those images that mean rank < 90th percentiles. Then choose the image with maximum number of pixels satisfying rank condition to be the denominator image. </p> 
+
+<h3>Step 3: Initial normal estimation </h3>
+<p>The objects are supposed to be nearly Lambertian. To cancel out surface albedo, divide each image by the denominator image to get k-1 ratio images (suppose in total k images). Each equation is: 
+<td><center><a href="images/dps/ratio_eq.png"><img src="images/dps/ratio_eq.png" height="50" width="100"></a></center>
+  which can then be turned into the form A_x*N_x+A_y*N_y+A_z*N_z = 0, where normal N = (N_x, N_y, N_z), and A_x = I_1*L_2x - I_2*L_1x (similar for A_y and A_z). Stack all k-1 equations, and solve it by SVD to get the initial normal.
+</p>
+<h3>Step 4: Refining normal by MRF graph cut </h3>
+<p> Technical details please see the paper. For implementation, basically input initially estimated normal and set MRF energy for graph cut problem as: 
+  <td><center><a href="images/dps/energy.png"><img src="images/dps/energy.png" height="250" width="350"></a></center>
+    Then let the <a href="http://vision.csd.uwo.ca/code/" >gco library</a> to find the best cut minimizing energy function. The alpha_s corresponds to vertices on a upper-half subdivided (5 times) icosahedron. In my implementation, I set lambda to 0.5, and sigma to 0.65 (smaller the sigma, smoother the refined normal ).
+</p>
+
+<h3>Step 5: Reconstruct 3D models </h3>
+<p> Given the refined normal on each pixel, I transferred it to gradient by the following: 
+  <td><center><a href="images/dps/stg.jpg"><img src="images/dps/stg.jpg" height="200" width="350"></a></center>
+    and use <a href="http://www.peterkovesi.com/matlabfns/#shapelet" >Peter Kovesi's library</a> to get slant and tilt, which is then used to reconstruct the surface. The denominator image is used as texture for the model.
+</p>
+<h3>Results </h3>
+<p>From left to right: 
+<p>denominator image selected, initial normal, refined normal, 3D model, textured 3D model
+<table>
+  <tr>
+    <td><center><a href="images/dps/02_deImg.bmp"><img src="images/dps/02_deImg.bmp" height="120" width="150"></a></center></td>
+    <td><center><a href="images/dps/02_initNorm.bmp"><img src="images/dps/02_initNorm.bmp" height="120" width="150"></a></center></td>
+    <td><center><a href="images/dps/02_refinedNorm.bmp"><img src="images/dps/02_refinedNorm.bmp" height="120" width="150"></a></center></td>
+    <td><center><a href="images/dps/02_model.png"><img src="images/dps/02_model.png" height="120" width="130"></a></center></td>
+    <td><center><a href="images/dps/02_textured.png"><img src="images/dps/02_textured.png" height="120" width="140"></a></center></td>
+  </tr>
+  <tr>
+    <td><center><a href="images/dps/03_deImg.bmp"><img src="images/dps/03_deImg.bmp" height="200" width="150"></a></center></td>
+    <td><center><a href="images/dps/03_initNorm.bmp"><img src="images/dps/03_initNorm.bmp" height="200" width="150"></a></center></td>
+    <td><center><a href="images/dps/03_refinedNorm.bmp"><img src="images/dps/03_refinedNorm.bmp" height="200" width="150"></a></center></td>
+    <td><center><a href="images/dps/03_model.png"><img src="images/dps/03_model.png" height="200" width="100"></a></center></td>
+    <td><center><a href="images/dps/03_textured.png"><img src="images/dps/03_textured.png" height="200" width="100"></a></center></td>
+  </tr>
+  <tr>
+    <td><center><a href="images/dps/04_deImg.bmp"><img src="images/dps/04_deImg.bmp" height="120" width="150"></a></center></td>
+    <td><center><a href="images/dps/04_initNorm.bmp"><img src="images/dps/04_initNorm.bmp" height="120" width="150"></a></center></td>
+    <td><center><a href="images/dps/04_refinedNorm.bmp"><img src="images/dps/04_refinedNorm.bmp" height="120" width="150"></a></center></td>
+    <td><center><a href="images/dps/04_model.png"><img src="images/dps/04_model.png" height="120" width="150"></a></center></td>
+    <td><center><a href="images/dps/04_textured.png"><img src="images/dps/04_textured.png" height="120" width="150"></a></center></td>
+  </tr>
+  <tr>
+    <td><center><a href="images/dps/05_deImg.bmp"><img src="images/dps/05_deImg.bmp" height="185" width="150"></a></center></td>
+    <td><center><a href="images/dps/05_initNorm.bmp"><img src="images/dps/05_initNorm.bmp" height="185" width="150"></a></center></td>
+    <td><center><a href="images/dps/05_refinedNorm.bmp"><img src="images/dps/05_refinedNorm.bmp" height="185" width="150"></a></center></td>
+    <td><center><a href="images/dps/05_model.png"><img src="images/dps/05_model.png" height="185" width="125"></a></center></td>
+    <td><center><a href="images/dps/05_textured.png"><img src="images/dps/05_textured.png" height="185" width="150"></a></center></td>
+  </tr>
+  <tr>
+    <td><center><a href="images/dps/06_deImg.bmp"><img src="images/dps/06_deImg.bmp" height="185" width="150"></a></center></td>
+    <td><center><a href="images/dps/06_initNorm.bmp"><img src="images/dps/06_initNorm.bmp" height="185" width="130"></a></center></td>
+    <td><center><a href="images/dps/06_refinedNorm.bmp"><img src="images/dps/06_refinedNorm.bmp" height="185" width="130"></a></center></td>
+    <td><center><a href="images/dps/06_model.png"><img src="images/dps/06_model.png" height="185" width="125"></a></center></td>
+    <td><center><a href="images/dps/06_textured.png"><img src="images/dps/06_textured.png" height="185" width="125"></a></center></td>
+  </tr>
+  <tr>
+    <td><center><a href="images/dps/07_deImg.bmp"><img src="images/dps/07_deImg.bmp" height="140" width="150"></a></center></td>
+    <td><center><a href="images/dps/07_initNorm.bmp"><img src="images/dps/07_initNorm.bmp" height="140" width="150"></a></center></td>
+    <td><center><a href="images/dps/07_refinedNorm.bmp"><img src="images/dps/07_refinedNorm.bmp" height="140" width="150"></a></center></td>
+    <td><center><a href="images/dps/07_model.png"><img src="images/dps/07_model.png" height="140" width="150"></a></center></td>
+    <td><center><a href="images/dps/07_textured.png"><img src="images/dps/07_textured.png" height="140" width="150"></a></center></td>
+  </tr>
+  <tr>
+    <td><center><a href="images/dps/08_deImg.bmp"><img src="images/dps/08_deImg.bmp" height="140" width="150"></a></center></td>
+    <td><center><a href="images/dps/08_initNorm.bmp"><img src="images/dps/08_initNorm.bmp" height="140" width="150"></a></center></td>
+    <td><center><a href="images/dps/08_refinedNorm.bmp"><img src="images/dps/08_refinedNorm.bmp" height="140" width="150"></a></center></td>
+    <td><center><a href="images/dps/08_model.png"><img src="images/dps/08_model.png" height="140" width="150"></a></center></td>
+    <td><center><a href="images/dps/08_textured.png"><img src="images/dps/08_textured.png" height="140" width="150"></a></center></td>
+  </tr>
+  <tr>
+    <td><center><a href="images/dps/09_deImg.bmp"><img src="images/dps/09_deImg.bmp" height="140" width="150"></a></center></td>
+    <td><center><a href="images/dps/09_initNorm.bmp"><img src="images/dps/09_initNorm.bmp" height="140" width="150"></a></center></td>
+    <td><center><a href="images/dps/09_refinedNorm.bmp"><img src="images/dps/09_refinedNorm.bmp" height="140" width="150"></a></center></td>
+    <td><center><a href="images/dps/09_model.png"><img src="images/dps/09_model.png" height="140" width="150"></a></center></td>
+    <td><center><a href="images/dps/09_textured.png"><img src="images/dps/09_textured.png" height="140" width="150"></a></center></td>
+  </tr>
+  <tr>
+    <td><center><a href="images/dps/10_deImg.bmp"><img src="images/dps/10_deImg.bmp" height="170" width="150"></a></center></td>
+    <td><center><a href="images/dps/10_initNorm.bmp"><img src="images/dps/10_initNorm.bmp" height="170" width="150"></a></center></td>
+    <td><center><a href="images/dps/10_refinedNorm.bmp"><img src="images/dps/10_refinedNorm.bmp" height="170" width="150"></a></center></td>
+    <td><center><a href="images/dps/10_model.png"><img src="images/dps/10_model.png" height="160" width="150"></a></center></td>
+    <td><center><a href="images/dps/10_textured.png"><img src="images/dps/10_textured.png" height="150" width="150"></a></center></td>
+  </tr>
+</table>
+<h3>Reference </h3>
+<ul>
+  <li>Paper: <a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1467260" >Dense Photometric Stereo Using a Mirror Sphere and Graph Cut</a></li>
+  <li><a href="http://www.cs.ust.hk/~cktang/" >CK Tang</a>'s COMP5421 Notes at HKUST</li>
+</ul>
+        </section>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
