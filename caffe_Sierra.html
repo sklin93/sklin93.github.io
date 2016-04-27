@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+  <title>Trace by sklin93</title>
+  </head>
+  <title>Trace by sklin93</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1><a href="index.html" style="color:white">Trace</a></h1>
+        <h2></h2>
+        <a href="https://github.com/sklin93" class="button"><small>Follow me on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h2>
+<a id="sikun-lins-homepage" class="anchor" href="#sikun-lins-homepage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install Caffe on Sierra</h2>
+
+<ol>
+<li>Makefile change:</li>
+</ol>
+<ul>
+<li>add opencv_imgcodecs at LIBRARIES += , which now becomes LIBRARIES += glog gflags protobuf boost_system boost_filesystem m hdf5_hl hdf5 opencv_imgcodecs (otherwise error occur during build for cv::imread etc.)</li>
+</ul>
+<ol start="2">
+<li>Makefile.config change:</li>
+</ol>
+<ul>
+<li>cpu_only &amp; use cudnn</li>
+<li>level_db(Uncomment, otherwise malloc when import caffe at Sierra)</li>
+<li>opencv version (if 3)</li>
+<li>Python include&amp; lib if not using the system default one</li>
+</ul>
+<p>Here’s my config:</p>
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-style: italic">## Refer to http://caffe.berkeleyvision.org/installation.html</span>
+<span style="color: #008800; font-style: italic"># Contributions simplifying and improving our build system are welcome!</span>
+
+<span style="color: #008800; font-style: italic"># cuDNN acceleration switch (uncomment to build with cuDNN).</span>
+<span style="color: #008800; font-style: italic"># USE_CUDNN := 1</span>
+
+<span style="color: #008800; font-style: italic"># CPU-only switch (uncomment to build without GPU support).</span>
+<span style="color: #B8860B">CPU_ONLY</span> <span style="color: #666666">:=</span> 1
+
+<span style="color: #008800; font-style: italic"># uncomment to disable IO dependencies and corresponding data layers</span>
+<span style="color: #008800; font-style: italic"># USE_OPENCV := 0</span>
+<span style="color: #B8860B">USE_LEVELDB</span> <span style="color: #666666">:=</span> 0
+<span style="color: #008800; font-style: italic"># USE_LMDB := 0</span>
+
+<span style="color: #008800; font-style: italic"># uncomment to allow MDB_NOLOCK when reading LMDB files (only if necessary)</span>
+<span style="color: #008800; font-style: italic">#	You should not set this flag if you will be reading LMDBs with any</span>
+<span style="color: #008800; font-style: italic">#	possibility of simultaneous read and write</span>
+<span style="color: #008800; font-style: italic"># ALLOW_LMDB_NOLOCK := 1</span>
+
+<span style="color: #008800; font-style: italic"># Uncomment if you&#39;re using OpenCV 3</span>
+<span style="color: #B8860B">OPENCV_VERSION</span> <span style="color: #666666">:=</span> 3
+
+<span style="color: #008800; font-style: italic"># To customize your choice of compiler, uncomment and set the following.</span>
+<span style="color: #008800; font-style: italic"># N.B. the default for Linux is g++ and the default for OSX is clang++</span>
+<span style="color: #008800; font-style: italic"># CUSTOM_CXX := g++</span>
+
+<span style="color: #008800; font-style: italic"># CUDA directory contains bin/ and lib/ directories that we need.</span>
+<span style="color: #B8860B">CUDA_DIR</span> <span style="color: #666666">:=</span> /Developer/NVIDIA/CUDA-8.0
+<span style="color: #008800; font-style: italic"># On Ubuntu 14.04, if cuda tools are installed via</span>
+<span style="color: #008800; font-style: italic"># &quot;sudo apt-get install nvidia-cuda-toolkit&quot; then use this instead:</span>
+<span style="color: #008800; font-style: italic"># CUDA_DIR := /usr</span>
+
+<span style="color: #008800; font-style: italic"># CUDA architecture setting: going with all of them.</span>
+<span style="color: #008800; font-style: italic"># For CUDA &lt; 6.0, comment the *_50 lines for compatibility.</span>
+<span style="color: #B8860B">CUDA_ARCH</span> <span style="color: #666666">:=</span> -gencode <span style="color: #B8860B">arch</span><span style="color: #666666">=</span>compute_20,code<span style="color: #666666">=</span>sm_20 <span style="color: #BB6622; font-weight: bold">\</span>
+		-gencode <span style="color: #B8860B">arch</span><span style="color: #666666">=</span>compute_20,code<span style="color: #666666">=</span>sm_21 <span style="color: #BB6622; font-weight: bold">\</span>
+		-gencode <span style="color: #B8860B">arch</span><span style="color: #666666">=</span>compute_30,code<span style="color: #666666">=</span>sm_30 <span style="color: #BB6622; font-weight: bold">\</span>
+		-gencode <span style="color: #B8860B">arch</span><span style="color: #666666">=</span>compute_35,code<span style="color: #666666">=</span>sm_35 <span style="color: #BB6622; font-weight: bold">\</span>
+		-gencode <span style="color: #B8860B">arch</span><span style="color: #666666">=</span>compute_50,code<span style="color: #666666">=</span>sm_50 <span style="color: #BB6622; font-weight: bold">\</span>
+		-gencode <span style="color: #B8860B">arch</span><span style="color: #666666">=</span>compute_50,code<span style="color: #666666">=</span>compute_50
+
+<span style="color: #008800; font-style: italic"># BLAS choice:</span>
+<span style="color: #008800; font-style: italic"># atlas for ATLAS (default)</span>
+<span style="color: #008800; font-style: italic"># mkl for MKL</span>
+<span style="color: #008800; font-style: italic"># open for OpenBlas</span>
+<span style="color: #B8860B">BLAS</span> <span style="color: #666666">:=</span> atlas
+<span style="color: #008800; font-style: italic"># Custom (MKL/ATLAS/OpenBLAS) include and lib directories.</span>
+<span style="color: #008800; font-style: italic"># Leave commented to accept the defaults for your choice of BLAS</span>
+<span style="color: #008800; font-style: italic"># (which should work)!</span>
+<span style="color: #B8860B">BLAS_INCLUDE</span> <span style="color: #666666">:=</span> /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/Headers 
+<span style="color: #B8860B">BLAS_LIB</span> <span style="color: #666666">:=</span> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A
+
+<span style="color: #008800; font-style: italic"># Homebrew puts openblas in a directory that is not on the standard search path</span>
+<span style="color: #008800; font-style: italic"># BLAS_INCLUDE := $(shell brew --prefix openblas)/include</span>
+<span style="color: #008800; font-style: italic"># BLAS_LIB := $(shell brew --prefix openblas)/lib</span>
+
+<span style="color: #008800; font-style: italic"># This is required only if you will compile the matlab interface.</span>
+<span style="color: #008800; font-style: italic"># MATLAB directory should contain the mex binary in /bin.</span>
+<span style="color: #008800; font-style: italic"># MATLAB_DIR := /usr/local</span>
+<span style="color: #008800; font-style: italic"># MATLAB_DIR := /Applications/MATLAB_R2012b.app</span>
+
+<span style="color: #008800; font-style: italic"># NOTE: this is required only if you will compile the python interface.</span>
+<span style="color: #008800; font-style: italic"># We need to be able to find Python.h and numpy/arrayobject.h.</span>
+<span style="color: #B8860B">PYTHON_INCLUDE</span> <span style="color: #666666">:=</span> /System/Library/Frameworks/Python.framework/Headers <span style="color: #BB6622; font-weight: bold">\</span>
+		/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/numpy/core/include
+<span style="color: #B8860B">PYTHON_LIB</span> <span style="color: #666666">:=</span> /System/Library/Frameworks/Python.framework/Versions/2.7/lib
+<span style="color: #008800; font-style: italic"># Anaconda Python distribution is quite popular. Include path:</span>
+<span style="color: #008800; font-style: italic"># Verify anaconda location, sometimes it&#39;s in root.</span>
+<span style="color: #008800; font-style: italic"># ANACONDA_HOME := $(HOME)/anaconda</span>
+<span style="color: #008800; font-style: italic"># PYTHON_INCLUDE := $(ANACONDA_HOME)/include \</span>
+<span style="color: #008800; font-style: italic">		# $(ANACONDA_HOME)/include/python2.7 \</span>
+<span style="color: #008800; font-style: italic">		# $(ANACONDA_HOME)/lib/python2.7/site-packages/numpy/core/include \</span>
+
+<span style="color: #008800; font-style: italic"># Uncomment to use Python 3 (default is Python 2)</span>
+<span style="color: #008800; font-style: italic"># PYTHON_LIBRARIES := boost_python3 python3.5m</span>
+<span style="color: #008800; font-style: italic"># PYTHON_INCLUDE := /usr/include/python3.5m \</span>
+<span style="color: #008800; font-style: italic">#                 /usr/lib/python3.5/dist-packages/numpy/core/include</span>
+
+<span style="color: #008800; font-style: italic"># We need to be able to find libpythonX.X.so or .dylib.</span>
+<span style="color: #008800; font-style: italic"># PYTHON_INCLUDE += /System/Library/Frameworks/Python.framework/Headers</span>
+<span style="color: #008800; font-style: italic"># PYTHON_LIB := $(ANACONDA_HOME)/lib</span>
+
+<span style="color: #008800; font-style: italic"># Homebrew installs numpy in a non standard path (keg only)</span>
+<span style="color: #008800; font-style: italic"># PYTHON_INCLUDE += $(dir $(shell python -c &#39;import numpy.core; print(numpy.core.__file__)&#39;))/include</span>
+<span style="color: #008800; font-style: italic"># PYTHON_LIB += $(shell brew --prefix numpy)/lib</span>
+
+<span style="color: #008800; font-style: italic"># Uncomment to support layers written in Python (will link against Python libs)</span>
+<span style="color: #B8860B">WITH_PYTHON_LAYER</span> <span style="color: #666666">:=</span> 1
+
+<span style="color: #008800; font-style: italic"># Whatever else you find you need goes here.</span>
+<span style="color: #B8860B">INCLUDE_DIRS</span> <span style="color: #666666">:=</span> <span style="color: #AA22FF; font-weight: bold">$(</span>PYTHON_INCLUDE<span style="color: #AA22FF; font-weight: bold">)</span> /usr/local/include
+<span style="color: #B8860B">LIBRARY_DIRS</span> <span style="color: #666666">:=</span> <span style="color: #AA22FF; font-weight: bold">$(</span>PYTHON_LIB<span style="color: #AA22FF; font-weight: bold">)</span> /Library/Python/2.7/site-packages /usr/local/lib /usr/lib
+
+<span style="color: #008800; font-style: italic"># If Homebrew is installed at a non standard location (for example your home directory) and you use it for general dependencies</span>
+<span style="color: #008800; font-style: italic"># INCLUDE_DIRS += $(shell brew --prefix)/include</span>
+<span style="color: #008800; font-style: italic"># LIBRARY_DIRS += $(shell brew --prefix)/lib</span>
+
+<span style="color: #008800; font-style: italic"># Uncomment to use `pkg-config` to specify OpenCV library paths.</span>
+<span style="color: #008800; font-style: italic"># (Usually not necessary -- OpenCV libraries are normally installed in one of the above $LIBRARY_DIRS.)</span>
+<span style="color: #008800; font-style: italic"># USE_PKG_CONFIG := 1</span>
+
+<span style="color: #008800; font-style: italic"># N.B. both build and distribute dirs are cleared on `make clean`</span>
+
+<span style="color: #B8860B">BUILD_DIR</span> <span style="color: #666666">:=</span> build
+<span style="color: #B8860B">DISTRIBUTE_DIR</span> <span style="color: #666666">:=</span> distribute
+
+<span style="color: #008800; font-style: italic"># Uncomment for debugging. Does not work on OSX due to https://github.com/BVLC/caffe/issues/171</span>
+<span style="color: #008800; font-style: italic"># DEBUG := 1</span>
+
+<span style="color: #008800; font-style: italic"># The ID of the GPU that &#39;make runtest&#39; will use to run unit tests.</span>
+<span style="color: #B8860B">TEST_GPUID</span> <span style="color: #666666">:=</span> 0
+
+<span style="color: #008800; font-style: italic"># enable pretty build (comment to see full commands)</span>
+<span style="color: #B8860B">Q</span> <span style="color: #666666">?=</span> @
+</pre></div>
+
+
+<ol start="3">
+<li>Opencv library and Boost library:</li>
+</ol>
+<p>There are older versions of opencv and boost installed ealier on my computer, and these previous versions causes error during ‘make pytest’: unsafe use of relative rpath XXX.dylib in caffe/_caffe.so with restricted binary.</p>
+<p>For example, I used opencv3.0 before which was built from source, and this time it links the 3.0 during build by default (as /usr/local/Cellar is not on the config path, and it search for the dylib reside in /usr/local/lib). My solution is to copy new dylib that are downloaded into /usr/local/Cellar/xxx/xxx/lib by homebrew into /usr/local/lib to replace the previous ones.</p>
+<ol start="4">
+<li>Other things: </li></ol>
+<ul>
+  <li>Command line tool 8.0 is ok now, no need to switch back to 7.3 (even for gpu mode build)</li>
+  <li>During opencv installation through brew, need manually copy /usr/local/Cellar/opencv3/3.2.0/lib/python2.7/site-packages/cv2.so to python/search/path/in/profile/cv2.so (for me is /Library/Python/2.7/site-packages/cv2.so)</li>
+</ul>
+
+<h3>Overall...</h3>
+<p>Caffe is so messy... I love tensorflow much more.
+But some special pretrained models '.caffemodel' (ex. layers with holes) cannot be converted into tensorflow '.npy' format, so no other choice. Hey, researchers! Train further models using tensorflow!!!</p>
+
+  </body>
+</html>
