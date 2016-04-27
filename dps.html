@@ -51,7 +51,7 @@
 <h3>Step 4: Refining normal by MRF graph cut </h3>
 <p> Technical details please see the paper. For implementation, basically input initially estimated normal and set MRF energy for graph cut problem as: 
   <td><center><a href="images/dps/energy.png"><img src="images/dps/energy.png" height="250" width="350"></a></center>
-    Then let the <a href="http://vision.csd.uwo.ca/code/" >gco library</a> to find the best cut minimizing energy function. The alpha_s corresponds to vertices on a upper-half subdivided (5 times) icosahedron. In my implementation, I set lambda to 0.5, and sigma to 0.65 (smaller the sigma, smoother the refined normal ).
+    Then let the <a href="http://vision.csd.uwo.ca/code/" >gco library</a> to find the best cut minimizing energy function. In this step, I refer to <a href="http://blog.csdn.net/on2way/article/details/46742765" >this</a> blog about general steps using the library. The alpha_s corresponds to vertices on a upper-half subdivided (5 times) icosahedron. In my implementation, I set lambda to 0.5, and sigma to 0.65 (smaller the sigma, smoother the refined normal ).
 </p>
 
 <h3>Step 5: Reconstruct 3D models </h3>
@@ -131,6 +131,7 @@
 <ul>
   <li>Paper: <a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1467260" >Dense Photometric Stereo Using a Mirror Sphere and Graph Cut</a></li>
   <li><a href="http://www.cs.ust.hk/~cktang/" >CK Tang</a>'s COMP5421 Notes at HKUST</li>
+  <li><a href="http://blog.csdn.net/on2way/article/details/46742765" >How to use GCO library</a> (good resource, but in Chinese)</li>
 </ul>
         </section>
       </div>
